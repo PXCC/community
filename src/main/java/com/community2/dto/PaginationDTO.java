@@ -28,6 +28,7 @@ public class PaginationDTO {
         }else{
             totalPage = totalCount/size + 1;
         }
+        if(totalCount == 0) totalPage = 1;
         this.totalPage = totalPage;
         if(page>totalPage) page = totalPage;
         this.currentPage = page;
@@ -38,9 +39,9 @@ public class PaginationDTO {
             if(page+i<=totalPage) pages.add(page+i);
         }
         //是否展示上一页
-        if(page != 1) showPrevious = true; else showPrevious = false;
+        if(page > 1) showPrevious = true; else showPrevious = false;
         //是否展示下一页
-        if(page != totalPage) showNext = true; else showNext = false;
+        if(page < totalPage) showNext = true; else showNext = false;
         //是否展示回到第一页
         if(!pages.contains(1)) showFirstPage = true; else showFirstPage = false;
         //是否展示跳转到最后一页
