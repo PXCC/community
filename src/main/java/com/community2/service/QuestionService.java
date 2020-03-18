@@ -2,6 +2,7 @@ package com.community2.service;
 
 import com.community2.dto.PaginationDTO;
 import com.community2.dto.QuestionDTO;
+import com.community2.dto.QuestionQueryDTO;
 import com.community2.exception.CustomizeErrorCodeCode;
 import com.community2.exception.CustomizeException;
 import com.community2.mapper.QuestionExtMapper;
@@ -31,15 +32,25 @@ public class QuestionService {
     @Autowired
     private QuestionExtMapper questionExtMapper;
 
-    public PaginationDTO list(Integer page, Integer size) {
+    public PaginationDTO list(String search,Integer page, Integer size) {
+        if(StringUtils.isNotBlank(search)){
+            String[] tags = StringUtils.split(search," ");
+            search  = Arrays.stream(tags).collect(Collectors.joining("|"));
+        }
+
+        QuestionQueryDTO questionQueryDTO = new QuestionQueryDTO();
+        questionQueryDTO.setSearch(search);
         if(page<1) page = 1;
         Integer offsize = size*(page-1);
         QuestionExample questionExample = new QuestionExample();
         questionExample.setOrderByClause("gmt_create desc");
-        List<Question> questions = questionMapper.selectByExampleWithBLOBsWithRowbounds(questionExample,new RowBounds(offsize,size));
+        questionQueryDTO.setSize(size);
+        questionQueryDTO.setPage(offsize);
+        List<Question> questions = questionExtMapper.selectBySearch(questionQueryDTO);
         List<QuestionDTO> questionDTOList = new ArrayList<>();
 
-        PaginationDTO paginationDTO = new PaginationDTO();
+
+        PaginationDTO<QuestionDTO> paginationDTO = new PaginationDTO();
         for (Question question : questions) {
             User user = userMapper.selectByPrimaryKey(question.getCreator());
             QuestionDTO questionDTO = new QuestionDTO();
@@ -47,9 +58,11 @@ public class QuestionService {
             questionDTO.setUser(user);
             questionDTOList.add(questionDTO);
         }
-        paginationDTO.setQuestions(questionDTOList);
-        Integer totalCount = (int)questionMapper.countByExample(new QuestionExample());
+        paginationDTO.setData(questionDTOList);
+        Integer totalCount = (int)questionExtMapper.countBySearch(questionQueryDTO);
         paginationDTO.setPagination(totalCount,page,size);
+
+
 
         return paginationDTO;
     }
@@ -63,7 +76,7 @@ public class QuestionService {
         List<Question> questions = questionMapper.selectByExampleWithBLOBsWithRowbounds(example,new RowBounds(offsize,size));
         List<QuestionDTO> questionDTOList = new ArrayList<>();
 
-        PaginationDTO paginationDTO = new PaginationDTO();
+        PaginationDTO<QuestionDTO> paginationDTO = new PaginationDTO();
         for (Question question : questions) {
             User user = userMapper.selectByPrimaryKey(question.getCreator());
             QuestionDTO questionDTO = new QuestionDTO();
@@ -71,7 +84,7 @@ public class QuestionService {
             questionDTO.setUser(user);
             questionDTOList.add(questionDTO);
         }
-        paginationDTO.setQuestions(questionDTOList);
+        paginationDTO.setData(questionDTOList);
         QuestionExample questionExample = new QuestionExample();
         questionExample.createCriteria()
                 .andCreatorEqualTo(userId);

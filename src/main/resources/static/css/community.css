@@ -8,9 +8,6 @@ a{
 a:hover{
     text-decoration: none;
 }
-ul{
-    list-style:none;
-}
 .main{
     background-color: white;
     margin:45px;
@@ -52,7 +49,7 @@ ul{
     margin-top:0;
 }
 #comment-section{
-    padding-top:200px;
+    padding-top:100px;
 }
 .menu{
     color:#999;
@@ -93,6 +90,7 @@ ul{
     margin-bottom: 15px;
 }
 .question-related{
+    list-style:none;
     line-height: 20px;
     font-size: 12px;
     margin-left: 0;
@@ -104,11 +102,17 @@ ul{
     margin-top: 10px;
 }
 .publish-tag-tab .label-info{
-    margin-right: 10px;
+    white-space: normal;
+    display:inline-block;
+    margin:5px 5px;
 }
 .tab-pane{
     padding-top: 10px;
 }
 .sub-comments .btn{
     margin: 10px 0;
+}
+.footer {
+    padding: 6px 25%;
+    color: #666;
 }

@@ -11,6 +11,8 @@
 >[github OAuth](https://developer.github.com/apps/building-oauth-apps/creating-an-oauth-app/)
 >
 >[github deploy_key](https://developer.github.com/v3/guides/managing-deploy-keys/#deploy-keys)
+>
+>[Markdown](https://github.com/pandao/editor.md)
 
 ## 工具
 >git
